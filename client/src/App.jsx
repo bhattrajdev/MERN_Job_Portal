@@ -7,7 +7,7 @@ const App = () => {
     <>
     <Navbar/>
       <Outlet />
-      <footer>This is the footer</footer>
+     
     </>
   );
 };
