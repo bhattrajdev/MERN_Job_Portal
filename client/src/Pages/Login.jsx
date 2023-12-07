@@ -19,19 +19,33 @@ const Login = () => {
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-6">
-            <label className="block text-lg mb-2 font-">Username</label>
+            <label className="block text-lg mb-2 font-">
+              Username :
+              {errors.username && (
+                <span className="text-red-500 pl-2">User Name is required</span>
+              )}
+            </label>
             <input
               type="text"
-              {...register("username", )}
+              {...register("username", {
+                required: true,
+              })}
               placeholder="Enter your Username"
               className="w-full px-4 py-2 rounded-md border focus:outline-none focus:border-blue-500"
             />
           </div>
           <div className="mb-6">
-            <label className="block text-lg mb-2 font-">Password</label>
+            <label className="block text-lg mb-2 font-">
+              Password :
+              {errors.password && (
+                <span className="text-red-500 pl-2">Password is required</span>
+              )}
+            </label>
             <input
               type="password"
-              {...register("password")}
+              {...register("password", {
+                required: true,
+              })}
               placeholder="Enter your Password"
               className="w-full px-4 py-2 rounded-md border focus:outline-none focus:border-blue-500"
             />
