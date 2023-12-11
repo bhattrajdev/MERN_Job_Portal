@@ -5,7 +5,7 @@ const Button = ({ onClickHandler, value, title }) => {
     <button
       onClick={onClickHandler}
       value={value}
-      className={`px-4 py-1 border text-base hover:bg-blue hover:text-white`}
+      className="px-4 py-1 border text-base hover:bg-blue hover:text-white"
     >
       {title}
     </button>

@@ -110,6 +110,7 @@ const Home = () => {
       {/* main content */}
       <div className="bg-[#FAFAFA] md:grid grid-cols-4 gap-8 lg:px-24 px-4 py-12">
         {/* for left side */}
+        
         <div className="bg-white p-4 rounded">
           <Sidebar handleChange={handleChange} handleClick={handleClick} />
         </div>
@@ -153,7 +154,7 @@ const Home = () => {
         </div>
 
         {/* for right part */}
-        <div className="bg-white p-4 rounded">
+        <div className="bg-white p-4 hidden lg:block rounded">
           {" "}
           <Newsletter />
         </div>

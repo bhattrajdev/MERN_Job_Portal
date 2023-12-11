@@ -42,6 +42,7 @@ const CreateJob = () => {
     { value: "Haskell", label: "Haskell" },
     { value: "Kotlin", label: "Kotlin" },
   ];
+
   return (
     <div className="max-w-screen-2xl container mx-auto xl:px-24 px-4">
       {/* form  */}
@@ -50,21 +51,39 @@ const CreateJob = () => {
           {/* first row */}
           <div className="create-job-flex">
             <div className="lg:w-1/2 2-full">
-              <label className="block mb-2 text-lg">Job Title</label>
+              <label className="block mb-2 text-lg">
+                Job Title :
+                {errors.jobTitle && (
+                  <span className="text-red-500 pl-2">
+                    Job title is required
+                  </span>
+                )}
+              </label>
               <input
                 type="text"
-                defaultValue={"Web Developer"}
-                {...register("jobTitle")}
+                placeholder="Eg: Web Developer "
+                {...register("jobTitle", {
+                  required: true,
+                })}
                 className="create-job-input"
               />
             </div>
 
             <div className="lg:w-1/2 2-full">
-              <label className="block mb-2 text-lg">Company Name</label>
+              <label className="block mb-2 text-lg">
+                Company Name :
+                {errors.companyName && (
+                  <span className="text-red-500 pl-2">
+                    Company name is required
+                  </span>
+                )}
+              </label>
               <input
                 type="text"
                 placeholder={"Ex: Microsoft"}
-                {...register("companyName")}
+                {...register("companyName", {
+                  required: true,
+                })}
                 className="create-job-input"
               />
             </div>
@@ -73,21 +92,39 @@ const CreateJob = () => {
           {/* second row */}
           <div className="create-job-flex">
             <div className="lg:w-1/2 2-full">
-              <label className="block mb-2 text-lg">Minimum Salary</label>
+              <label className="block mb-2 text-lg">
+                Minimum Salary :
+                {errors.minSalary && (
+                  <span className="text-red-500 pl-2">
+                    Minimum salary is required
+                  </span>
+                )}
+              </label>
               <input
                 type="text"
                 placeholder={"$20k"}
-                {...register("minPrice")}
+                {...register("minSalary", {
+                  required: true,
+                })}
                 className="create-job-input"
               />
             </div>
 
             <div className="lg:w-1/2 2-full">
-              <label className="block mb-2 text-lg">Maximum Salary</label>
+              <label className="block mb-2 text-lg">
+                Maximum Salary :
+                {errors.minSalary && (
+                  <span className="text-red-500 pl-2">
+                    Maximum salary is required
+                  </span>
+                )}
+              </label>
               <input
                 type="text"
                 placeholder={"$120k"}
-                {...register("maxPrice")}
+                {...register("maxSalary", {
+                  required: true,
+                })}
                 className="create-job-input"
               />
             </div>
@@ -96,8 +133,20 @@ const CreateJob = () => {
           {/* third row */}
           <div className="create-job-flex">
             <div className="lg:w-1/2 2-full">
-              <label className="block mb-2 text-lg">Salary Type</label>
-              <select {...register("salaryType")} className="create-job-input">
+              <label className="block mb-2 text-lg">
+                Salary Type :
+                {errors.salaryType && (
+                  <span className="text-red-500 pl-2">
+                    Salary Type is required
+                  </span>
+                )}
+              </label>
+              <select
+                {...register("salaryType", {
+                  required: true,
+                })}
+                className="create-job-input"
+              >
                 <option value="">Choose your salary type</option>
                 <option value="Hourly">Hourly</option>
                 <option value="Monthly">Monthly</option>
@@ -106,11 +155,20 @@ const CreateJob = () => {
             </div>
 
             <div className="lg:w-1/2 2-full">
-              <label className="block mb-2 text-lg">Job Location</label>
+              <label className="block mb-2 text-lg">
+                Job Location :
+                {errors.jobLocation && (
+                  <span className="text-red-500 pl-2">
+                    Job Location is required
+                  </span>
+                )}
+              </label>
               <input
                 type="text"
                 placeholder={"Ex: New York"}
-                {...register("jobLocation")}
+                {...register("jobLocation", {
+                  required: true,
+                })}
                 className="create-job-input"
               />
             </div>
@@ -119,18 +177,37 @@ const CreateJob = () => {
           {/* fourth row */}
           <div className="create-job-flex">
             <div className="lg:w-1/2 2-full">
-              <label className="block mb-2 text-lg">Job Posting Date</label>
+              <label className="block mb-2 text-lg">
+                Expiry Date :
+                {errors.expirydate && (
+                  <span className="text-red-500 pl-2">
+                    Expiry Date is required
+                  </span>
+                )}
+              </label>
               <input
                 type="date"
                 placeholder={"Ex: 2023-11-03"}
-                {...register("postingDate")}
+                {...register("expirydate", {
+                  required: true,
+                })}
                 className="create-job-input"
               />
             </div>
+
             <div className="lg:w-1/2 2-full">
-              <label className="block mb-2 text-lg">Experience Level</label>
+              <label className="block mb-2 text-lg">
+                Experience Level :
+                {errors.experienceLevel && (
+                  <span className="text-red-500 pl-2">
+                    Experience Level is required
+                  </span>
+                )}
+              </label>
               <select
-                {...register("experienceLevel")}
+                {...register("experienceLevel", {
+                  required: true,
+                })}
                 className="create-job-input"
               >
                 <option value="">Choose your salary type</option>
@@ -156,18 +233,36 @@ const CreateJob = () => {
           {/* sixth row */}
           <div className="create-job-flex">
             <div className="lg:w-1/2 2-full">
-              <label className="block mb-2 text-lg">Company Logo</label>
+              <label className="block mb-2 text-lg">
+                Company Logo :
+                {errors.companyLogo && (
+                  <span className="text-red-500 pl-2">
+                    Company Logo is required
+                  </span>
+                )}
+              </label>
               <input
                 type="url"
                 placeholder="Paste your company logo URL"
-                {...register("companyLogo")}
+                {...register("companyLogo", {
+                  required: true,
+                })}
                 className="create-job-input"
               />
             </div>
             <div className="lg:w-1/2 2-full">
-              <label className="block mb-2 text-lg">Employment Type</label>
+              <label className="block mb-2 text-lg">
+                Employment Type :
+                {errors.employmentType && (
+                  <span className="text-red-500 pl-2">
+                    Employment Type is required
+                  </span>
+                )}
+              </label>
               <select
-                {...register("employmentType")}
+                {...register("employmentType", {
+                  required: true,
+                })}
                 className="create-job-input"
               >
                 <option value="">Choose your salary type</option>
@@ -180,9 +275,18 @@ const CreateJob = () => {
 
           {/* seventh row */}
           <div className="w-full">
-            <label className="block mb-2 text-lg">Job Description</label>
+            <label className="block mb-2 text-lg">
+              Job Description :
+              {errors.description && (
+                <span className="text-red-500 pl-2">
+                  Job Description is required
+                </span>
+              )}
+            </label>
             <textarea
-              {...register("description")}
+              {...register("description", {
+                required: true,
+              })}
               className="w-full pl-3 py-1.5 focus:outline-none placeholder:text-gray-700"
               rows={6}
               placeholder="Job Description"
@@ -191,16 +295,19 @@ const CreateJob = () => {
 
           {/* last row */}
           <div className="w-full">
-            <label className="block mb-2 text-lg">Job Posted By</label>
+            <label className="block mb-2 text-lg">Job Posted By
+            
+            </label>
             <input
               type="email"
-             placeholder="your email"
-              {...register("postedBy")}
+              placeholder="your email"
+              {...register("postedBy", {
+                required: true,
+              })}
               className="create-job-input"
             />
           </div>
 
-          
           <input
             type="submit"
             className="block mt-12 bg-blue text-white font-semibold px-8 py-2 rounded-sm cursor-pointer ml-auto"
