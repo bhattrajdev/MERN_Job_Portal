@@ -5,6 +5,8 @@ import About from "../Pages/About";
 import CreateJob from "../Pages/CreateJob";
 import Login from "../Pages/Login";
 import Register from "../Pages/Register";
+import JobDetail from "../Pages/JobDetail";
+import PageNotFound from "../Errors/PageNotFound";
 
 const Router = createBrowserRouter([
   {
@@ -12,11 +14,15 @@ const Router = createBrowserRouter([
     element: <App />,
     children: [
       { path: "/", element: <Home /> },  
+      { path: `/jobdetails/:_id`, element: <JobDetail /> },
       { path: "/post-job", element: <CreateJob /> },  
       { path: "/login", element: <Login/> },  
       { path: "/register", element: <Register/> },  
     ],
-  },
+  },{
+    path: "*",
+    element: <PageNotFound/>
+  }
 ]);
 
 export default Router;

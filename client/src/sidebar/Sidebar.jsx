@@ -46,10 +46,10 @@ const Sidebar = ({ handleChange, handleClick }) => {
               <EmploymentType handleChange={handleChange} />
             </div>
             {/* for filter button */}
-            <div className="px-4 py-2 border text-base bg-blue flex justify-center ">
+            <div className="">
               <button
                 onClick={filterHandler}
-                className="text-center text-white font-semibold"
+                className="text-center px-4 py-2 w-full border text-base bg-blue cursor-pointer flex justify-center  text-white font-semibold"
               >
                 Filter
               </button>

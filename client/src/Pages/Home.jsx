@@ -119,13 +119,13 @@ const Home = () => {
         <div className="col-span-2 bg-white p-4 rounded">
           {" "}
           {isLoading ? (
-            <p className="font-medium">Loading...</p>
+            <div className="font-medium">Loading...</div>
           ) : result.length > 0 ? (
             <Jobs result={result} />
           ) : (
             <>
               <h3 className="font-bold text-lg">{result.length} Jobs</h3>
-              <p className="mt-2">Not Data Found</p>
+              <div className="mt-2">Not Data Found</div>
             </>
           )}
           {/* pagination here */}
