@@ -12,15 +12,16 @@ import { IoIosGitNetwork } from "react-icons/io";
 import { FaMoneyBill, FaSignal, FaComputer } from "react-icons/fa6";
 import JobDetailCard from "../components/jobDetailCard";
 import Loader from "../components/Loader";
+import api from "../config/api";
 
-const JobDetail = () => {
+const MyJobDetail = () => {
   const [data, setData] = useState(null);
   const { _id } = useParams();
   const [isCopied, setIsCopied] = useState(false);
   const fetchJobDetail = async () => {
     console.log(_id);
     try {
-      const response = await axios.get(`http://localhost:5151/job/${_id}`);
+      const response = await api.get(`/job/${_id}`);
       setData(response.data.job);
       console.log("Data found:", response.data.job);
     } catch (error) {
@@ -51,10 +52,6 @@ const JobDetail = () => {
     }
   };
 
-  const applyNowHandler =()=>{
-    console.log('This is the apply now handler')
-  }
-
   useEffect(() => {
     fetchJobDetail();
   }, [_id]);
@@ -64,7 +61,7 @@ const JobDetail = () => {
       {data ? (
         <>
           <div className="container mx-auto px-20 py-12 grid grid-cols-1 md:grid-cols-4  gap-8">
-            <div className="col-span-3">
+            <div className="col-span-4">
               {/* First box */}
               <div className="bg-[#FAFAFA] flex p-6 rounded-md shadow-md">
                 <div className="flex justify-end items-center mb-4">
@@ -133,26 +130,25 @@ const JobDetail = () => {
                     text="Employment Type"
                     data={data.employmentType}
                   />
-                {/* For required skills */}
-                <div className="flex gap-4 ">
-                  <span className="rounded-md font-semibold bg-blue opacity-80 p-3 text-3xl text-white">
-                    <FaComputer />
-                  </span>
-                  <div className="flex gap-1 flex-col">
-                    <h4 className="font-semibold">Required Skills</h4>
-                    <div className="flex flex-row">
-                      {data.requiredSkill.map((item, index) => (
-                        <div key={index} className="flex items-center mr-2">
-                          <span className="bg-gray-200 p-1  rounded-lg ">
-                            {item}
-                          </span>
-                        </div>
-                      ))}
+                  {/* For required skills */}
+                  <div className="flex gap-4 ">
+                    <span className="rounded-md font-semibold bg-blue opacity-80 p-3 text-3xl text-white">
+                      <FaComputer />
+                    </span>
+                    <div className="flex gap-1 flex-col">
+                      <h4 className="font-semibold">Required Skills</h4>
+                      <div className="flex flex-row">
+                        {data.requiredSkill.map((item, index) => (
+                          <div key={index} className="flex items-center mr-2">
+                            <span className="bg-gray-200 p-1  rounded-lg ">
+                              {item}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
-                </div>
-
               </div>
 
               {/* for description */}
@@ -161,20 +157,9 @@ const JobDetail = () => {
                 <p>{data.jobDescription}</p>
               </div>
             </div>
-
-            {/* ARE YOU INTERSTED IN THIS JOB SIDE */}
-            <div className="md:col-span-1 ">
-              <div className="bg-[#FAFAFA] flex flex-col p-6 rounded-md shadow-md">
-                <div className="font-bold">
-                  {" "}
-                  Are you interested in this job?
-                </div>
-                <span className="mt-4">Application ends:</span>
-                <p className="font-bold"> {data.expiryDate}</p>
-                <button className="mt-4 bg-blue opacity-95 p-2 rounded-md font-bold text-white" onClick={applyNowHandler}>Apply Now</button>
-              </div>
-            </div>
           </div>
+
+          {/* for job requests */}
         </>
       ) : (
         <Loader />
@@ -183,4 +168,4 @@ const JobDetail = () => {
   );
 };
 
-export default JobDetail;
+export default MyJobDetail;

@@ -15,7 +15,8 @@ const router = express.Router();
 
 // ROUTES REALTED TO USERS
 
-router.route("/").get(protect,admin,getUsers).post(createUser).get(getUser);
+router.route("/").get(protect,admin,getUsers).post(createUser);
 router.route("/:id").get(getUser).delete(deleteUser).put(updateUser);
 router.route("/login").post(authUser);
+
 export default router;

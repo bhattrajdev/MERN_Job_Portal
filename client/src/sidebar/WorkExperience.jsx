@@ -1,7 +1,7 @@
-import React from 'react'
-import InputField from '../components/InputFIeld';
+import React from "react";
+import InputField from "../components/InputFIeld";
 
-const WorkExperience = ({handleChange}) => {
+const WorkExperience = ({ handleChange }) => {
   return (
     <div>
       <h4 className="text-lg font-medium mb-2">Work Experience</h4>
@@ -34,11 +34,9 @@ const WorkExperience = ({handleChange}) => {
           title="Work Remotely"
           name="test"
         />
-
-
       </div>
     </div>
   );
-}
+};
 
-export default WorkExperience
+export default WorkExperience;

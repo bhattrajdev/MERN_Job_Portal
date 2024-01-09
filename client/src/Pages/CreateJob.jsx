@@ -2,19 +2,59 @@ import { useState } from "react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import CreatableSelect from "react-select/creatable";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import api from "../config/api";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CreateJob = () => {
   const [selectedOption, setSelectedOption] = useState(null);
+  
+  const token = localStorage.getItem("token");
+  console.log(`Token found ${token}`);
 
+   const userId = localStorage.getItem('Id');
+   console.log(`User found ${userId}`);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-
+  
   const onSubmit = (data) => {
     data.skills = selectedOption;
-    console.log(data);
+    const dateToday = new Date().toISOString().slice(0, 10);
+   
+    const response = api.post(
+      "/job",
+      {
+        companyLogo: data.companyLogo,
+        companyName: data.companyName,
+        employmentType: data.employmentType,
+        experienceLevel: data.experienceLevel,
+        expiryDate: data.expiryDate,
+        jobDescription: data.jobDescription,
+        location: data.location,
+        maximumSalary: data.maximumSalary,
+        minimumSalary: data.minimumSalary,
+        salaryType: data.salaryType,
+        skills: data.skills,
+        title: data.title,
+        jobPostedBy: userId,
+        postedOn: dateToday,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    if (response.status == 201) {
+  toast.error("Job posted successfully");
+    }else{
+      toast.error("Error posting the job")
+    }
   };
 
   const options = [
@@ -45,6 +85,7 @@ const CreateJob = () => {
 
   return (
     <div className="max-w-screen-2xl container mx-auto xl:px-24 px-4">
+      <ToastContainer />
       {/* form  */}
       <div className="bg-[#fafafa] py-10 px-4 lg:px-16">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -53,7 +94,7 @@ const CreateJob = () => {
             <div className="lg:w-1/2 2-full">
               <label className="block mb-2 text-lg">
                 Job Title :
-                {errors.jobTitle && (
+                {errors.title && (
                   <span className="text-red-500 pl-2">
                     Job title is required
                   </span>
@@ -62,7 +103,7 @@ const CreateJob = () => {
               <input
                 type="text"
                 placeholder="Eg: Web Developer "
-                {...register("jobTitle", {
+                {...register("title", {
                   required: true,
                 })}
                 className="create-job-input"
@@ -94,7 +135,7 @@ const CreateJob = () => {
             <div className="lg:w-1/2 2-full">
               <label className="block mb-2 text-lg">
                 Minimum Salary :
-                {errors.minSalary && (
+                {errors.minimumSalary && (
                   <span className="text-red-500 pl-2">
                     Minimum salary is required
                   </span>
@@ -103,7 +144,7 @@ const CreateJob = () => {
               <input
                 type="text"
                 placeholder={"$20k"}
-                {...register("minSalary", {
+                {...register("minimumSalary", {
                   required: true,
                 })}
                 className="create-job-input"
@@ -113,7 +154,7 @@ const CreateJob = () => {
             <div className="lg:w-1/2 2-full">
               <label className="block mb-2 text-lg">
                 Maximum Salary :
-                {errors.minSalary && (
+                {errors.maximumSalary && (
                   <span className="text-red-500 pl-2">
                     Maximum salary is required
                   </span>
@@ -122,7 +163,7 @@ const CreateJob = () => {
               <input
                 type="text"
                 placeholder={"$120k"}
-                {...register("maxSalary", {
+                {...register("maximumSalary", {
                   required: true,
                 })}
                 className="create-job-input"
@@ -157,7 +198,7 @@ const CreateJob = () => {
             <div className="lg:w-1/2 2-full">
               <label className="block mb-2 text-lg">
                 Job Location :
-                {errors.jobLocation && (
+                {errors.location && (
                   <span className="text-red-500 pl-2">
                     Job Location is required
                   </span>
@@ -166,7 +207,7 @@ const CreateJob = () => {
               <input
                 type="text"
                 placeholder={"Ex: New York"}
-                {...register("jobLocation", {
+                {...register("location", {
                   required: true,
                 })}
                 className="create-job-input"
@@ -186,9 +227,9 @@ const CreateJob = () => {
                 )}
               </label>
               <input
-                type="date"
+                type="text"
                 placeholder={"Ex: 2023-11-03"}
-                {...register("expirydate", {
+                {...register("expiryDate", {
                   required: true,
                 })}
                 className="create-job-input"
@@ -266,8 +307,8 @@ const CreateJob = () => {
                 className="create-job-input"
               >
                 <option value="">Choose your salary type</option>
-                <option value="Full-time">Full Time</option>
-                <option value="Part-time">Part Time</option>
+                <option value="Full Time">Full Time</option>
+                <option value="Part Time">Part Time</option>
                 <option value="Temporary">Temporary</option>
               </select>
             </div>
@@ -284,7 +325,7 @@ const CreateJob = () => {
               )}
             </label>
             <textarea
-              {...register("description", {
+              {...register("jobDescription", {
                 required: true,
               })}
               className="w-full pl-3 py-1.5 focus:outline-none placeholder:text-gray-700"
@@ -294,20 +335,6 @@ const CreateJob = () => {
           </div>
 
           {/* last row */}
-          <div className="w-full">
-            <label className="block mb-2 text-lg">Job Posted By
-            
-            </label>
-            <input
-              type="email"
-              placeholder="your email"
-              {...register("postedBy", {
-                required: true,
-              })}
-              className="create-job-input"
-            />
-          </div>
-
           <input
             type="submit"
             className="block mt-12 bg-blue text-white font-semibold px-8 py-2 rounded-sm cursor-pointer ml-auto"

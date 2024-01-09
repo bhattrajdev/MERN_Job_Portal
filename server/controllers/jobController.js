@@ -121,4 +121,23 @@ const deleteJob = async (req, res) => {
   }
 };
 
-export { createJob, getJob, getJobs, deleteJob, updateJob };
+
+// FOR GETTING JOBS UPLOADED BY THE USER
+const getMyJobs = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const jobs = await Job.find({ jobPostedBy: userId });
+
+    if (jobs.length > 0) {
+      res.status(200).json(jobs);
+    } else {
+      res.status(404).json({ message: "No Job Found" });
+    }
+  } catch (error) {
+    console.error("Error fetching jobs:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+export { createJob, getJob, getJobs, deleteJob, updateJob, getMyJobs };

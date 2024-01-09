@@ -1,14 +1,16 @@
-import React from "react";
+import { useEffect, useState, createContext } from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import "./app.css"
+import "./App.css"
+
 const App = () => {
+
+
   return (
     <>
-    <Navbar/>
-      <Outlet />
-     
-    </>
+    <Navbar />
+    <Outlet />
+    </>    
   );
 };
 

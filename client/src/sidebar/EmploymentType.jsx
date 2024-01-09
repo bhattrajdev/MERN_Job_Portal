@@ -1,7 +1,7 @@
-import React from 'react'
-import InputField from '../components/InputFIeld';
+import React from "react";
+import InputField from "../components/InputFIeld";
 
-const EmploymentType = ({handleChange}) => {
+const EmploymentType = ({ handleChange }) => {
   return (
     <div>
       <h4 className="text-lg font-medium mb-2">Employment Type</h4>
@@ -37,6 +37,6 @@ const EmploymentType = ({handleChange}) => {
       </div>
     </div>
   );
-}
+};
 
-export default EmploymentType
+export default EmploymentType;

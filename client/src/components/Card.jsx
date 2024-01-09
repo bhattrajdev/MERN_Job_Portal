@@ -1,28 +1,28 @@
-import React from 'react'
-import {Link} from 'react-router-dom'
-import {FiCalendar, FiClock, FiDollarSign, FiMapPin} from "react-icons/fi"
+import React from "react";
+import { Link } from "react-router-dom";
+import { FiCalendar, FiClock, FiDollarSign, FiMapPin } from "react-icons/fi";
 
-const Card = ({data}) => {
-    const {
-      companyName,
-      companyLogo,
-      minimumSalary,
-      maximumSalary,
-      title,
-      location,
-      employmentType,
-      postedOn,
-      jobDescription,
-      _id,
-    } = data;
-    console.log(_id)
+const Card = ({ data }) => {
+  const {
+    companyName,
+    companyLogo,
+    minimumSalary,
+    maximumSalary,
+    title,
+    location,
+    employmentType,
+    postedOn,
+    jobDescription,
+    _id,
+  } = data;
+  console.log(_id);
   return (
-    <section className="card">
+    <section className="card mb-7">
       <Link
         to={`jobdetails/${_id}`}
         className="flex gap-4 flex-col sm:flex-row items-start"
       >
-        <div className='w-32'>
+        <div className="w-32">
           <img src={companyLogo} alt="" />
         </div>
         <div>
@@ -36,7 +36,7 @@ const Card = ({data}) => {
             <span className="flex items-center gap-2">
               <FiClock /> {employmentType}{" "}
             </span>
-           
+
             <span className="flex items-center gap-2">
               <FiCalendar /> {postedOn}{" "}
             </span>
@@ -45,6 +45,6 @@ const Card = ({data}) => {
       </Link>
     </section>
   );
-}
+};
 
-export default Card
+export default Card;
