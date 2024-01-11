@@ -14,7 +14,8 @@ dotenv.config();
 app.use(cors());
 connectDB();
 
-
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public"));
 
 
 
