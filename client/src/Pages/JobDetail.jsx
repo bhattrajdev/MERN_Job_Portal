@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { ErrorMessage } from "@hookform/error-message";
 import axios from "axios";
 import {
   FiClock,
@@ -14,9 +16,17 @@ import JobDetailCard from "../components/jobDetailCard";
 import Loader from "../components/Loader";
 
 const JobDetail = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const [showModal, setShowModal] = React.useState(true);
   const [data, setData] = useState(null);
   const { _id } = useParams();
   const [isCopied, setIsCopied] = useState(false);
+
   const fetchJobDetail = async () => {
     console.log(_id);
     try {
@@ -51,9 +61,19 @@ const JobDetail = () => {
     }
   };
 
-  const applyNowHandler =()=>{
-    console.log('This is the apply now handler')
-  }
+ const onSubmit = (data, e) => {
+   console.log(data);
+   // Your form submission logic here
+
+   // Reset the form data
+   e.target.reset();
+
+   // Alternatively, you can use the reset function from react-hook-form
+   // reset();
+
+   setShowModal(false);
+ };
+
 
   useEffect(() => {
     fetchJobDetail();
@@ -61,6 +81,152 @@ const JobDetail = () => {
 
   return (
     <>
+      {/* code for modal */}
+      {showModal ? (
+        <>
+          <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+            <div className="relative w-auto my-6 mx-auto max-w-3xl">
+              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
+                  <h3 className="text-xl flex justify-center font-semibold">
+                    Job Application Form
+                  </h3>
+                  <button
+                    className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                    onClick={() => setShowModal(false)}
+                  >
+                    <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
+                      ×
+                    </span>
+                  </button>
+                </div>
+                {/* body */}
+                <div className="relative p-6 flex-auto">
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    {/* for email */}
+                    <div className="mb-3">
+                      <label className="block text-base mb-2">
+                        Email:
+                        <ErrorMessage
+                          errors={errors}
+                          name="email"
+                          render={({ message }) => (
+                            <span className="text-red-500 pl-2">{message}</span>
+                          )}
+                        />
+                        <input
+                          type="text"
+                          {...register("email", {
+                            required: "Email is Required !!!",
+                            pattern: {
+                              value:
+                                /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+                              message: "Invalid Email !!!",
+                            },
+                          })}
+                          className="w-full px-4 py-2 rounded-md border focus:outline-none focus:border-blue-500"
+                        />
+                      </label>
+                    </div>
+
+                    {/* for contact number */}
+                    <div className="mb-3">
+                      <label className="block text-base mb-2">
+                        Contact Number:
+                        <ErrorMessage
+                          errors={errors}
+                          name="contact"
+                          render={({ message }) => (
+                            <span className="text-red-500 pl-2">{message}</span>
+                          )}
+                        />
+                      </label>
+                      <input
+                        type="text"
+                        {...register("contact", {
+                          required: "Contact is Required !!!",
+                          pattern: {
+                            value:
+                              /^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/,
+                            message: "Invalid Contact !!!",
+                          },
+                        })}
+                        className="w-full px-4 py-2 rounded-md border focus:outline-none focus:border-blue-500"
+                      />
+                    </div>
+
+                    {/* for cover letter */}
+                    <div className="mb-3">
+                      <label className="block text-base mb-2">
+                        Cover Letter:
+                      </label>
+                      <textarea
+                        type="text"
+                        rows={5}
+                        {...register("coverLetter")}
+                        className="w-full px-4 py-2 rounded-md border focus:outline-none focus:border-blue-500"
+                      />
+                    </div>
+
+                    {/* for resume */}
+                    <div className="mb-3">
+                      <label className="block text-base mb-2">
+                        Upload Resume :
+                        <ErrorMessage
+                          errors={errors}
+                          name="resume"
+                          render={({ message }) => (
+                            <span className="text-red-500 pl-2">{message}</span>
+                          )}
+                        />
+                        {/*  */}
+                      </label>
+                      <input
+                        type="file"
+                        {...register("resume", {
+                          required: "Resume is Required !!!",
+                          validate: (value) => {
+                            const acceptedFormats = ["pdf", "docx", "doc"];
+                            const fileExtension = value[0]?.name
+                              .split(".")
+                              .pop()
+                              .toLowerCase();
+                            if (!acceptedFormats.includes(fileExtension)) {
+                              return "Invalid file format !!!";
+                            }
+                            return true;
+                          },
+                        })}
+                        accept=".pdf,.doc,.docx"
+                        className="w-full px-4 py-2 rounded-md border focus:outline-none focus:border-blue-500"
+                      />
+                    </div>
+                    <div className="mt-6 flex gap-3 justify-end">
+                      <button
+                        type="button"
+                        className="text-base bg-red-600 p-2 rounded-sm text-white"
+                        onClick={() => setShowModal(false)}
+                      >
+                        Close
+                      </button>
+                      <button
+                        type="submit"
+                        className="text-base bg-blue  p-2 rounded-sm text-white"
+                      >
+                        Submit
+                      </button>
+                    </div>
+                  </form>
+                </div>
+                {/* footer */}
+              </div>
+            </div>
+          </div>
+          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+        </>
+      ) : null}
+
+      {/* for the main job detail page */}
       {data ? (
         <>
           <div className="container mx-auto px-20 py-12 grid grid-cols-1 md:grid-cols-4  gap-8">
@@ -133,26 +299,25 @@ const JobDetail = () => {
                     text="Employment Type"
                     data={data.employmentType}
                   />
-                {/* For required skills */}
-                <div className="flex gap-4 ">
-                  <span className="rounded-md font-semibold bg-blue opacity-80 p-3 text-3xl text-white">
-                    <FaComputer />
-                  </span>
-                  <div className="flex gap-1 flex-col">
-                    <h4 className="font-semibold">Required Skills</h4>
-                    <div className="flex flex-row">
-                      {data.requiredSkill.map((item, index) => (
-                        <div key={index} className="flex items-center mr-2">
-                          <span className="bg-gray-200 p-1  rounded-lg ">
-                            {item}
-                          </span>
-                        </div>
-                      ))}
+                  {/* For required skills */}
+                  <div className="flex gap-4 ">
+                    <span className="rounded-md font-semibold bg-blue opacity-80 p-3 text-3xl text-white">
+                      <FaComputer />
+                    </span>
+                    <div className="flex gap-1 flex-col">
+                      <h4 className="font-semibold">Required Skills</h4>
+                      <div className="flex flex-row">
+                        {data.requiredSkill.map((item, index) => (
+                          <div key={index} className="flex items-center mr-2">
+                            <span className="bg-gray-200 p-1  rounded-lg ">
+                              {item}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
-                </div>
-
               </div>
 
               {/* for description */}
@@ -171,7 +336,12 @@ const JobDetail = () => {
                 </div>
                 <span className="mt-4">Application ends:</span>
                 <p className="font-bold"> {data.expiryDate}</p>
-                <button className="mt-4 bg-blue opacity-95 p-2 rounded-md font-bold text-white" onClick={applyNowHandler}>Apply Now</button>
+                <button
+                  className="mt-4 bg-blue opacity-95 p-2 rounded-md font-bold text-white"
+                  onClick={() => setShowModal(true)}
+                >
+                  Apply Now
+                </button>
               </div>
             </div>
           </div>

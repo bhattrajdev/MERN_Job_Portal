@@ -160,6 +160,57 @@ const MyJobDetail = () => {
           </div>
 
           {/* for job requests */}
+          <div className="container mx-auto px-20 py-12">
+            <h2 className="text-2xl  font-bold mb-4">Job Requests</h2>
+            <div className="overflow-x-auto">
+              <table className="min-w-full border border-gray-300">
+                <thead>
+                  <tr>
+                    <th className="create-table-border">S.N.</th>
+                    <th className="create-table-border">Name</th>
+                    <th className="create-table-border">Email</th>
+                    <th className="create-table-border">Applied On</th>
+                    <th className="create-table-border">C.V.</th>
+                    <th className="create-table-border">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {/* {jobs
+                  .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                  .map((job, index) => (
+                    <tr key={job._id}>
+                      <td className="create-table-border">{index + 1} </td>
+                      <td className="create-table-border">
+                        <img
+                          src={job.companyLogo}
+                          alt="Job Image"
+                          className="w-12 h-12 object-cover"
+                        />
+                      </td>
+                      <td className="create-table-border">{job.title}</td>
+                      <td className="create-table-border">{job.postedOn}</td>
+                      <td className="create-table-border">{job.expiryDate}</td>
+                      <td className="border border-gray-300 px-4 py-2 space-x-2">
+                        <button
+                          onClick={() => viewHandler(job._id)}
+                          className="bg-green-600 text-white px-3 py-1 rounded"
+                        >
+                          View
+                        </button>
+
+                        <button className="bg-yellow-500 text-white px-3 py-1 rounded">
+                          Edit
+                        </button>
+                        <button className="bg-red-500 text-white px-3 py-1 rounded">
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))} */}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </>
       ) : (
         <Loader />

@@ -55,7 +55,7 @@ const Login = () => {
           </div>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-6">
-              <label className="block text-lg mb-2 font-">
+              <label className="block text-lg mb-2">
                 Email :
                 {errors.email && (
                   <span className="text-red-500 pl-2">Email is required</span>
@@ -71,7 +71,7 @@ const Login = () => {
               />
             </div>
             <div className="mb-6">
-              <label className="block text-lg mb-2 font-">
+              <label className="block text-lg mb-2 ">
                 Password :
                 {errors.password && (
                   <span className="text-red-500 pl-2">

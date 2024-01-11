@@ -10,6 +10,7 @@ import PageNotFound from "../Errors/PageNotFound";
 import MyJob from "../Pages/MyJob";
 import MyJobDetail from "../Pages/MyJobDetail";
 import RouteMiddleware from "../middleware/RouteMiddleware";
+import Demo from "../Pages/Demo";
 
 const Router = createBrowserRouter([
   {
@@ -49,6 +50,10 @@ const Router = createBrowserRouter([
   {
     path: "*",
     element: <PageNotFound />,
+  },
+  {
+    path: "/demo",
+    element: <Demo />,
   },
 ]);
 
