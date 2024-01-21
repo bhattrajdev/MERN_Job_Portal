@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { FaBarsStaggered, FaXmark, FaUser } from "react-icons/fa6";
 import api from "../config/api";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [isLogin, setIsLogin] = useState(false);
-
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const navigate = useNavigate();
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -108,18 +110,15 @@ const Navbar = () => {
 
             {isDropdownVisible && (
               <div className="absolute right-0 mt-2 space-y-2 bg-white border rounded-md shadow-lg w-48">
-                <a
-                  href="#"
-                  className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+            
+                <button
+                  onClick={() => {
+                    navigate("/jobhistory");
+                  }}
+                  className="w-full px-4 py-2  hover:bg-gray-200"
                 >
-                  Profile
-                </a>
-                <a
-                  href="#"
-                  className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-                >
-                  Settings
-                </a>
+                  Job History
+                </button>
                 <button
                   onClick={logoutHandler}
                   className="w-full px-4 py-2 text-red-600 hover:bg-gray-200"
@@ -136,7 +135,7 @@ const Navbar = () => {
               Log in
             </Link>
             <Link
-              to="/Sign up"
+              to="/register"
               className="py-2 px-5 border rounded bg-blue text-white"
             >
               Sign up

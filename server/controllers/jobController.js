@@ -44,7 +44,7 @@ const createJob = async (req, res) => {
   }
 };
 
-// FOR GETTING ALL THE JOBS
+// FOR GETTING ALL THE JOBS 
 const getJobs = async (req, res) => {
   try {
     const jobs = await Job.find();

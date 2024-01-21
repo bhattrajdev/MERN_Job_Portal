@@ -14,21 +14,28 @@ import { IoIosGitNetwork } from "react-icons/io";
 import { FaMoneyBill, FaSignal, FaComputer } from "react-icons/fa6";
 import JobDetailCard from "../components/jobDetailCard";
 import Loader from "../components/Loader";
+import api from "../config/api.jsx";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
+
 
 const JobDetail = () => {
+  const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("Id");
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const [showModal, setShowModal] = React.useState(true);
+  const navigate = useNavigate()
+  const [showModal, setShowModal] = React.useState(false);
   const [data, setData] = useState(null);
   const { _id } = useParams();
   const [isCopied, setIsCopied] = useState(false);
 
   const fetchJobDetail = async () => {
-    console.log(_id);
     try {
       const response = await axios.get(`http://localhost:5151/job/${_id}`);
       setData(response.data.job);
@@ -61,19 +68,64 @@ const JobDetail = () => {
     }
   };
 
- const onSubmit = (data, e) => {
-   console.log(data);
-   // Your form submission logic here
+  const onSubmit = async (data, e) => {
+    console.log(data);
+    try {
+      const formData = new FormData();
+      formData.append("email", data.email);
+      formData.append("contact", data.contact);
+      formData.append("cv", data.cv);
+      formData.append("resume", data.resume[0]);
+      formData.append("jobId", _id);
+      formData.append("userId", userId);
 
-   // Reset the form data
-   e.target.reset();
+      const response = await api.post("/jobApplication/", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data", // Set content type for file uploads
+        },
+      });
 
-   // Alternatively, you can use the reset function from react-hook-form
-   // reset();
+      console.log(`response is ${response}`);
 
-   setShowModal(false);
- };
+      if (response.status === 201) {
+        toast.success("Job posted successfully");
+        setShowModal(false);
+        e.target.reset();
+      } else if (response.status === 403) {
+        toast.error("You have already applied for this job");
+        setShowModal(false);
+        e.target.reset();
+      } else {
+        toast.error("Error posting the job");
+      }
+    } catch (error) {
+      if (error.isAxiosError && error.response) {
+        // Axios error with a response
+        const response = error.response;
 
+        if (response.status === 403) {
+          toast.error("You have already applied for this job");
+          setShowModal(false);
+          e.target.reset();
+        } else {
+          toast.error(`Error: ${response.data.message || response.statusText}`);
+        }
+      } else {
+        // Other errors (e.g., network error)
+        console.log(`Error: ${error.message}`);
+        toast.error("An error occurred while posting the job");
+      }
+    }
+  };
+
+  const modelHandler = () =>{
+    if(token){
+      setShowModal(true)
+    }else{
+  navigate('/login')
+    }
+  }
 
   useEffect(() => {
     fetchJobDetail();
@@ -81,6 +133,7 @@ const JobDetail = () => {
 
   return (
     <>
+      <ToastContainer />
       {/* code for modal */}
       {showModal ? (
         <>
@@ -102,7 +155,10 @@ const JobDetail = () => {
                 </div>
                 {/* body */}
                 <div className="relative p-6 flex-auto">
-                  <form onSubmit={handleSubmit(onSubmit)}>
+                  <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    encType="multipart/form-data"
+                  >
                     {/* for email */}
                     <div className="mb-3">
                       <label className="block text-base mb-2">
@@ -163,7 +219,7 @@ const JobDetail = () => {
                       <textarea
                         type="text"
                         rows={5}
-                        {...register("coverLetter")}
+                        {...register("cv")}
                         className="w-full px-4 py-2 rounded-md border focus:outline-none focus:border-blue-500"
                       />
                     </div>
@@ -338,7 +394,7 @@ const JobDetail = () => {
                 <p className="font-bold"> {data.expiryDate}</p>
                 <button
                   className="mt-4 bg-blue opacity-95 p-2 rounded-md font-bold text-white"
-                  onClick={() => setShowModal(true)}
+                  onClick={() => modelHandler()}
                 >
                   Apply Now
                 </button>

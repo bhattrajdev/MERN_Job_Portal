@@ -1,8 +1,8 @@
 import userRoutes from "./userRoutes.js";
 import jobRoutes from "./jobRoutes.js";
 import authRoutes from "./authRoutes.js"
-import JobApplication from "../models/jobApplication.js";
+import jobApplicationRoutes from "./jobApplicationRoutes.js"
 
 
 
-export { userRoutes, jobRoutes,authRoutes,JobApplication };
+export { userRoutes, jobRoutes, authRoutes, jobApplicationRoutes };

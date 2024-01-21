@@ -8,16 +8,11 @@ const YourComponent = () => {
   const token = localStorage.getItem("token");
 
   const navigate = useNavigate();
-const viewHandler = (id) =>{
-  navigate(`/my-job-detail/${id}`);
-}
-const editHandler = () =>{
-
-}
-const deleteHandler =() =>{
-
-}
-
+  const viewHandler = (id) => {
+    navigate(`/my-job-detail/${id}`);
+  };
+  const editHandler = () => {};
+  const deleteHandler = () => {};
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -36,10 +31,10 @@ const deleteHandler =() =>{
     };
 
     fetchJobs();
-  }, [userId, token]); // Include 'token' in the dependency array to re-run the effect when the token changes
+  }, [userId, token]);
 
   return (
-    <div className="container mx-auto px-8 py-8">
+    <div className="container mx-auto px-20 py-8">
       <h2 className="text-2xl font-bold mb-4">My Jobs</h2>
       <div className="overflow-x-auto">
         <table className="min-w-full border border-gray-300">
@@ -70,11 +65,12 @@ const deleteHandler =() =>{
                   <td className="create-table-border">{job.postedOn}</td>
                   <td className="create-table-border">{job.expiryDate}</td>
                   <td className="border border-gray-300 px-4 py-2 space-x-2">
+
                     <button
                       onClick={() => viewHandler(job._id)}
                       className="bg-green-600 text-white px-3 py-1 rounded"
                     >
-                      View
+                      View Post
                     </button>
 
                     <button className="bg-yellow-500 text-white px-3 py-1 rounded">

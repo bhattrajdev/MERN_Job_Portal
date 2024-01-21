@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import {
   FiClock,
   FiDollarSign,
@@ -13,13 +12,18 @@ import { FaMoneyBill, FaSignal, FaComputer } from "react-icons/fa6";
 import JobDetailCard from "../components/jobDetailCard";
 import Loader from "../components/Loader";
 import api from "../config/api";
+import { FaDownload, FaFileExport } from "react-icons/fa6";
 
 const MyJobDetail = () => {
   const [data, setData] = useState(null);
+  const [jobApplication, setJobApplication] = useState([]);
   const { _id } = useParams();
   const [isCopied, setIsCopied] = useState(false);
+  const token = localStorage.getItem('token')
+  
+  
+  // TO FETCH JOB DETAILS
   const fetchJobDetail = async () => {
-    console.log(_id);
     try {
       const response = await api.get(`/job/${_id}`);
       setData(response.data.job);
@@ -29,12 +33,29 @@ const MyJobDetail = () => {
     }
   };
 
+
+  // TO FETCH JOB APPLICATIONS
+  const fetchJobApplication = async () => {
+    try {
+      const response = await api.get(`/jobApplication/requests/${_id}`);
+
+      console.log(response);
+      setJobApplication(response.data.jobApplication);
+    } catch (error) {
+      console.error(`Error fetching job details: ${error.message}`);
+    }
+  };
+  
+  
+  // TO HANDLE COPY
   const handleCopy = async () => {
     const link = `http://localhost:5173/jobdetails/${_id}`;
     await navigator.clipboard.writeText(link);
     setIsCopied(true);
   };
-
+  
+  
+  // TO HANDLE SHARE
   const handleShare = async () => {
     try {
       if (navigator.share) {
@@ -52,8 +73,60 @@ const MyJobDetail = () => {
     }
   };
 
+
+  // TO HANDLE RESUME DOWNLOAD
+  const handleDownloadResume = (resumeFileName) => {
+    const link = document.createElement("a");
+    link.href = `http://localhost:5151/${resumeFileName}`;
+    link.download = resumeFileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+  
+  
+  // COLOR FOR STATUS
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Pending":
+        return "text-yellow-500";
+      case "Accepted":
+        return "text-green-500";
+      case "Rejected":
+        return "text-red-500";
+      default:
+        return "text-gray-500";
+    }
+  };
+
+// CODE FOR ACCEPT OR REJECT BUTTON
+ const decisionHandler = async (decision,applicationId) => {
+  console.log(`Decision : ${decision}`)
+  console.log(`Application Id : ${applicationId}`);
+   try {
+     const response = await api.put(
+       `/jobApplication/${applicationId}`,
+       {
+         status: decision,
+       },
+       {
+         headers: {
+           Authorization: `Bearer ${token}`,
+         },
+       }
+     );
+     console.log(response);
+     fetchJobApplication();
+   } catch (error) {
+     console.error(`Error updating job application status: ${error.message}`);
+   }
+ };
+
+
+
   useEffect(() => {
     fetchJobDetail();
+    fetchJobApplication();
   }, [_id]);
 
   return (
@@ -161,52 +234,81 @@ const MyJobDetail = () => {
 
           {/* for job requests */}
           <div className="container mx-auto px-20 py-12">
-            <h2 className="text-2xl  font-bold mb-4">Job Requests</h2>
+            <div className="flex justify-between mb-4">
+              <h2 className="text-xl  font-bold mb-4">Application Requests</h2>
+            </div>
+
             <div className="overflow-x-auto">
               <table className="min-w-full border border-gray-300">
                 <thead>
                   <tr>
                     <th className="create-table-border">S.N.</th>
-                    <th className="create-table-border">Name</th>
                     <th className="create-table-border">Email</th>
-                    <th className="create-table-border">Applied On</th>
-                    <th className="create-table-border">C.V.</th>
+                    <th className="create-table-border">Contact</th>
+                    <th className="create-table-border">Status</th>
+                    <th className="create-table-border">Download</th>
                     <th className="create-table-border">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {/* {jobs
-                  .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-                  .map((job, index) => (
+                  {jobApplication.map((job, index) => (
                     <tr key={job._id}>
-                      <td className="create-table-border">{index + 1} </td>
-                      <td className="create-table-border">
-                        <img
-                          src={job.companyLogo}
-                          alt="Job Image"
-                          className="w-12 h-12 object-cover"
-                        />
+                      <td className="create-table-border">{index + 1}</td>
+                      <td className="create-table-border">{job.email}</td>
+                      <td className="create-table-border">{job.contact}</td>
+                      <td
+                        className={`create-table-border font-bold ${getStatusColor(
+                          job.status
+                        )}`}
+                      >
+                        {job.status}
                       </td>
-                      <td className="create-table-border">{job.title}</td>
-                      <td className="create-table-border">{job.postedOn}</td>
-                      <td className="create-table-border">{job.expiryDate}</td>
-                      <td className="border border-gray-300 px-4 py-2 space-x-2">
-                        <button
-                          onClick={() => viewHandler(job._id)}
-                          className="bg-green-600 text-white px-3 py-1 rounded"
-                        >
-                          View
-                        </button>
 
-                        <button className="bg-yellow-500 text-white px-3 py-1 rounded">
-                          Edit
-                        </button>
-                        <button className="bg-red-500 text-white px-3 py-1 rounded">
-                          Delete
+                      <td className="create-table-border">
+                        <button
+                          onClick={() => handleDownloadResume(job.resume)}
+                          className="bg-orange-500  text-white px-3 py-1 rounded"
+                        >
+                          Download Resume
                         </button>
                       </td>
+
+                      {job.status === "Pending" ? (
+                        <td className="border border-gray-300 px-4 py-2 space-x-2">
+                          <button
+                            onClick={() => decisionHandler("Accepted", job._id)}
+                            className="bg-green-600 text-white px-3 py-1 rounded"
+                          >
+                            Accept
+                          </button>
+                          <button
+                            className="bg-red-500 text-white px-3 py-1 rounded"
+                            onClick={() => decisionHandler("Rejected", job._id)}
+                          >
+                            Reject
+                          </button>
+                        </td>
+                      ) : job.status === "Accepted" ? (
+                        <td className="border border-gray-300 px-4 py-2">
+                          <button
+                            className="bg-red-500 text-white px-3 py-1 rounded"
+                            onClick={() => decisionHandler("Rejected", job._id)}
+                          >
+                            Reject
+                          </button>
+                        </td>
+                      ) : job.status === "Rejected" ? (
+                        <td className="border border-gray-300 px-4 py-2">
+                          <button
+                            onClick={() => decisionHandler("Accepted", job._id)}
+                            className="bg-green-600 text-white px-3 py-1 rounded"
+                          >
+                            Accept
+                          </button>
+                        </td>
+                      ) : null}
                     </tr>
-                  ))} */}
+                  ))}
                 </tbody>
               </table>
             </div>

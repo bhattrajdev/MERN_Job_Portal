@@ -11,6 +11,8 @@ import MyJob from "../Pages/MyJob";
 import MyJobDetail from "../Pages/MyJobDetail";
 import RouteMiddleware from "../middleware/RouteMiddleware";
 import Demo from "../Pages/Demo";
+import JobHistory from "../Pages/JobHistory";
+
 
 const Router = createBrowserRouter([
   {
@@ -27,6 +29,7 @@ const Router = createBrowserRouter([
           </RouteMiddleware>
         ),
       },
+
       {
         path: `/my-job-detail/:_id`,
         element: (
@@ -35,6 +38,15 @@ const Router = createBrowserRouter([
           </RouteMiddleware>
         ),
       },
+      {
+        path: `/jobhistory`,
+        element: (
+          <RouteMiddleware>
+            <JobHistory />
+          </RouteMiddleware>
+        ),
+      },
+
       {
         path: "/post-job",
         element: (

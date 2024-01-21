@@ -1,4 +1,4 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 
 const jobSchema = mongoose.Schema(
   {
@@ -59,7 +59,7 @@ const jobSchema = mongoose.Schema(
     },
     jobPostedBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Users",
       required: true,
     },
   },
