@@ -21,14 +21,12 @@ const Home = () => {
       const response = await axios.get("http://localhost:5151/job");
       setJobs(response.data.jobs);
       setIsLoading(false);
-      setJobs((prevJobs) => {
-        return prevJobs;
-      });
     } catch (error) {
       console.error(`Error fetching jobs: ${error.message}`);
       setIsLoading(false);
     }
   };
+
   useEffect(() => {
     fetchJobs();
   }, []);
@@ -83,13 +81,37 @@ const Home = () => {
           salaryType,
           employmentType,
           postingDate,
-        }) =>
-          jobLocation.toLowerCase() === selected.toLowerCase() ||
-          parseInt(maxPrice) <= parseInt(selected) ||
-          postingDate >= selected ||
-          salaryType.toLowerCase() === selected.toLowerCase() ||
-          employmentType.toLowerCase() === selected.toLowerCase() ||
-          experienceLevel.toLowerCase() === selected.toLowerCase()
+        }) => {
+          // Convert maxPrice and selected to integers if they are supposed to be numeric
+          const parsedMaxPrice = parseInt(maxPrice);
+          const parsedSelected = parseInt(selected);
+
+          // Ensure that jobLocation is defined before performing operations
+          const isJobLocationMatch =
+            jobLocation && jobLocation.toLowerCase() === selected.toLowerCase();
+          const isMaxPriceMatch =
+            !isNaN(parsedMaxPrice) && parsedMaxPrice <= parsedSelected;
+          const isPostingDateMatch =
+            postingDate && new Date(postingDate) >= new Date(selected);
+          const isSalaryTypeMatch =
+            salaryType && salaryType.toLowerCase() === selected.toLowerCase();
+          const isEmploymentTypeMatch =
+            employmentType &&
+            employmentType.toLowerCase() === selected.toLowerCase();
+          const isExperienceLevelMatch =
+            experienceLevel &&
+            experienceLevel.toLowerCase() === selected.toLowerCase();
+
+          // Filter conditions
+          return (
+            isJobLocationMatch ||
+            isMaxPriceMatch ||
+            isPostingDateMatch ||
+            isSalaryTypeMatch ||
+            isEmploymentTypeMatch ||
+            isExperienceLevelMatch
+          );
+        }
       );
     }
 
@@ -112,7 +134,7 @@ const Home = () => {
 
         <div className="col-span-2 bg-white p-4 rounded">
           {isLoading ? (
-           <Loader/>
+            <Loader />
           ) : result.length > 0 ? (
             <Jobs result={result} />
           ) : (

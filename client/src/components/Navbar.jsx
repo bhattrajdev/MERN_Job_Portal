@@ -34,13 +34,12 @@ const Navbar = () => {
     };
   }, []);
 
-
   const logoutHandler = async () => {
     try {
       const response = await api.post(`/auth/destroy-token`);
-     if(response.data.isLogout){
-      localStorage.removeItem('token');
-        }
+      if (response.data.isLogout) {
+        localStorage.removeItem("token");
+      }
     } catch (error) {
       console.error("Error during logout:", error);
     }
@@ -110,7 +109,6 @@ const Navbar = () => {
 
             {isDropdownVisible && (
               <div className="absolute right-0 mt-2 space-y-2 bg-white border rounded-md shadow-lg w-48">
-            
                 <button
                   onClick={() => {
                     navigate("/jobhistory");
