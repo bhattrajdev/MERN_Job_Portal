@@ -18,11 +18,11 @@ const upload = fileUpload();
 router
   .route("/")
   .post(protect, upload.single("resume"), createJobApplication)
-  .get(protect, getAllJobApplications);
+  .get( getAllJobApplications);
 
 router
   .route(`/:id`)
-  .get(protect, getJobApplication)
+  .get( getJobApplication)
   .put(protect, upload.single("resume"), updateJobApplication)
   .delete(protect, deleteJobApplication);
 

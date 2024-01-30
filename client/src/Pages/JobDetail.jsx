@@ -363,13 +363,7 @@ const JobDetail = () => {
                     <div className="flex gap-1 flex-col">
                       <h4 className="font-semibold">Required Skills</h4>
                       <div className="flex flex-row">
-                        {data.requiredSkill.map((item, index) => (
-                          <div key={index} className="flex items-center mr-2">
-                            <span className="bg-gray-200 p-1  rounded-lg ">
-                              {item}
-                            </span>
-                          </div>
-                        ))}
+                       {data.requiredSkill}
                       </div>
                     </div>
                   </div>

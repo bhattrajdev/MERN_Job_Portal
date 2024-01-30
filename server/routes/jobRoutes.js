@@ -10,6 +10,10 @@ import { protect, admin } from "../middleware/authMiddleware.js";
 import express from "express";
 const router = express.Router();
 
+/*
+PARENT ROUTE /job
+*/
+
 // ROUTES RELATED TO JOB
 
 router.route("/").post(protect, createJob).get(getJobs);

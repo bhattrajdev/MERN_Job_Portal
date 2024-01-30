@@ -101,14 +101,7 @@ const Login = () => {
 
           {/* Or Signup Using */}
 
-          <p className="py-5 text-lg text-center">or sign in using</p>
-          <div className="">
-            <div className="flex justify-center gap-5 ">
-              <img src={"/images/google.png"} className="w-8 h-8" />
-              <img src={"/images/facebook.png"} className="w-8 h-8" />
-              <img src={"/images/twitter.png"} className="w-8 h-8" />
-            </div>
-          </div>
+         
 
           {/* New Here  */}
           <div className="text-center pt-5">

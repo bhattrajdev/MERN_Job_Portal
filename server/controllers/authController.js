@@ -35,15 +35,5 @@ const checkToken = async (req, res, next) => {
 };
 
 
-const destroyToken = (req, res) => {
-  try {
-    // Remove the token from local storage
-    // localStorage.removeItem("token");
-    res.status(200).json({ isLogout:true });
-  } catch (error) {
-    console.error("Error during logout:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-};
 
-export { checkToken,destroyToken };
+export { checkToken};

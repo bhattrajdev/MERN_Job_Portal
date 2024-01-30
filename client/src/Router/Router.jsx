@@ -10,7 +10,8 @@ import PageNotFound from "../Errors/PageNotFound";
 import MyJob from "../Pages/MyJob";
 import MyJobDetail from "../Pages/MyJobDetail";
 import RouteMiddleware from "../middleware/RouteMiddleware";
-import Demo from "../Pages/Demo";
+
+import EditJob from "../Pages/EditJob";
 import JobHistory from "../Pages/JobHistory";
 
 
@@ -55,6 +56,14 @@ const Router = createBrowserRouter([
           </RouteMiddleware>
         ),
       },
+      {
+        path: "editjob/:id",
+        element: (
+          <RouteMiddleware>
+            <EditJob />
+          </RouteMiddleware>
+        ),
+      },
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
     ],
@@ -63,10 +72,7 @@ const Router = createBrowserRouter([
     path: "*",
     element: <PageNotFound />,
   },
-  {
-    path: "/demo",
-    element: <Demo />,
-  },
+
 ]);
 
 export default Router;

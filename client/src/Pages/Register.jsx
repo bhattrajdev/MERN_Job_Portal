@@ -76,9 +76,7 @@ const Register = () => {
                 {...register("name", {
                   required: "Name is required !!!",
                   validate: {
-                    validName: (value) =>
-                      /^[A-Za-z]+$/.test(value) ||
-                      "Invalid characters in the name!",
+
                     length: (value) =>
                       value.length >= 3 || "Name must be at least 4 letters!",
                   },

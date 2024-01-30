@@ -5,6 +5,8 @@ import api from "../config/api";
 import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+  const token = localStorage.getItem("token");
+  const userId = localStorage.getItem('Id')
   const [isLogin, setIsLogin] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -13,7 +15,7 @@ const Navbar = () => {
     setIsMenuOpen(!isMenuOpen);
   };
   const loginHandler = () => {
-    const token = localStorage.getItem("token");
+    
     if (token) {
       setIsLogin(true);
     } else {
@@ -21,9 +23,15 @@ const Navbar = () => {
     }
   };
 
-  useEffect(() => {
-    loginHandler();
+ const logoutHandler = () => {
+      localStorage.removeItem("token");
+       localStorage.removeItem("Id");
+   
+ };
 
+
+  useEffect(() => {
+    loginHandler() 
     const localStorageChangeHandler = () => {
       loginHandler();
     };
@@ -32,18 +40,9 @@ const Navbar = () => {
     return () => {
       window.removeEventListener("storage", localStorageChangeHandler);
     };
-  }, []);
+  }, [token]);
 
-  const logoutHandler = async () => {
-    try {
-      const response = await api.post(`/auth/destroy-token`);
-      if (response.data.isLogout) {
-        localStorage.removeItem("token");
-      }
-    } catch (error) {
-      console.error("Error during logout:", error);
-    }
-  };
+ 
   const [isDropdownVisible, setDropdownVisible] = useState(false);
 
   const handleToggleDropdown = () => {
@@ -53,16 +52,15 @@ const Navbar = () => {
   const navItems = [
     { path: "/", title: "Start a search" },
     { path: "/my-job", title: "My Job" },
-    { path: "/salary", title: "Salary Estimated" },
     { path: "/post-job", title: "Post a Job" },
   ];
 
   return (
     <header className="max-w-screen-2xl container mx-auto xl:px-24 px-4">
       <nav className="flex justify-between items-center py-6">
-        <a href="/" className="flex items-center gap-2 text-2xl text-black">
+        <Link to="/" className="flex items-center gap-2 text-2xl text-black">
           <svg
-            xmlns="http://www/w3.org/2000/svg"
+            xmlns="http://www.w3.org/2000/svg"
             width="29"
             height="30"
             viewBox="0 0 29 30"
@@ -78,7 +76,7 @@ const Navbar = () => {
             <circle cx="16.9857" cy="17.4857" r="12.0143" fill="#3575E2" />
           </svg>
           JobPortal
-        </a>
+        </Link>
 
         {/* Nav items for large devices */}
         <ul className="hidden md:flex gap-12">
@@ -94,26 +92,26 @@ const Navbar = () => {
           ))}
         </ul>
 
-        {/* sign up and login button */}
-        {isLogin ? (
-          // code if user is login
+        {/* User dropdown for large devices */}
+        {isLogin && (
           <div
-            className="relative group"
+            className="relative group hidden md:flex items-center cursor-pointer"
             onClick={handleToggleDropdown}
-            onBlur={() => setDropdownVisible(false)}
           >
-            {/* Additional wrapper for user icon */}
-            <div className="flex cursor-pointer group-hover:bg-gray-100">
+            <div className="flex items-center gap-2">
               <FaUser />
+              <span className="text-base text-black font-medium">
+                {/* Display user name or other user information here */}
+              </span>
             </div>
 
             {isDropdownVisible && (
-              <div className="absolute right-0 mt-2 space-y-2 bg-white border rounded-md shadow-lg w-48">
+              <div className="absolute right-0 top-4 mt-2 space-y-2 bg-white border rounded-md shadow-lg w-48">
                 <button
                   onClick={() => {
                     navigate("/jobhistory");
                   }}
-                  className="w-full px-4 py-2  hover:bg-gray-200"
+                  className="w-full px-4 py-2 hover:bg-gray-200"
                 >
                   Job History
                 </button>
@@ -126,22 +124,25 @@ const Navbar = () => {
               </div>
             )}
           </div>
-        ) : (
-          // code if user not login
-          <div className="text-base text-primary font-medium space-x-5 hidden lg:block">
-            <Link to="/login" className="py-2 px-5 border rounded">
-              Log in
-            </Link>
-            <Link
-              to="/register"
-              className="py-2 px-5 border rounded bg-blue text-white"
-            >
-              Sign up
-            </Link>
-          </div>
         )}
 
-        {/* mobile menu */}
+        {!isLogin && (
+          <>
+            <div className="text-base text-primary font-medium space-x-5 hidden lg:block">
+              <Link to="/login" className="py-2 px-5 border rounded">
+                Log in
+              </Link>
+              <Link
+                to="/register"
+                className="py-2 px-5 border rounded bg-blue text-white"
+              >
+                Sign up
+              </Link>
+            </div>
+          
+          </>
+        )}
+        {/* Hamburger icon for mobile */}
         <div className="md:hidden block">
           <button onClick={handleMenuToggle}>
             {isMenuOpen ? (
@@ -153,7 +154,7 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* navitems for mobile screen */}
+      {/* Mobile menu */}
       {isMenuOpen && (
         <div className="px-4 bg-black py-5 rounded">
           <ul>
@@ -170,13 +171,32 @@ const Navbar = () => {
                 </NavLink>
               </li>
             ))}
-
-            <li className="text-white py-1">
-              <Link to="/login">Log in</Link>
-            </li>
-            <li className="text-white py-1">
-              <Link to="/Sign up">Sign up</Link>
-            </li>
+            {isLogin && (
+              <>
+                <li className="text-white py-1">
+                  <button
+                    onClick={() => {
+                      navigate("/jobhistory");
+                    }}
+                  >
+                    Job History
+                  </button>
+                </li>
+                <li className="text-white py-1">
+                  <button onClick={logoutHandler}>Logout</button>
+                </li>
+              </>
+            )}
+            {!isLogin && (
+              <>
+                <li className="text-white py-1">
+                  <Link to="/login">Log in</Link>
+                </li>
+                <li className="text-white py-1">
+                  <Link to="/Sign up">Sign up</Link>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       )}

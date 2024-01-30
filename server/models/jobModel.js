@@ -25,7 +25,7 @@ const jobSchema = mongoose.Schema(
     },
     experienceLevel: {
       type: String,
-      enum: ["Any expericence", "Internship", "Work remotely"],
+      enum: ["Any experience", "Internship", "Work remotely"],
       required: true,
     },
     location: {
@@ -41,7 +41,7 @@ const jobSchema = mongoose.Schema(
       required: true,
     },
     requiredSkill: {
-      type: Array,
+      type: String,
       required: true,
     },
     companyLogo: {

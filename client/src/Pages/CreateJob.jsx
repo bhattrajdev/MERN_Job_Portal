@@ -1,32 +1,37 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import CreatableSelect from "react-select/creatable";
-import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import api from "../config/api";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import { useNavigate } from "react-router-dom";
 const CreateJob = () => {
-  const [selectedOption, setSelectedOption] = useState(null);
-  
-  const token = localStorage.getItem("token");
-  console.log(`Token found ${token}`);
+  const [selectedOption, setSelectedOption] = useState([]);
+const navigate = useNavigate()
 
-   const userId = localStorage.getItem('Id');
-   console.log(`User found ${userId}`);
+  const token = localStorage.getItem("token");
+
+  const userId = localStorage.getItem("Id");
+  
   const {
     register,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  
-  const onSubmit = (data) => {
-    data.skills = selectedOption;
-    const dateToday = new Date().toISOString().slice(0, 10);
-   
-    const response = api.post(
+
+const onSubmit = async (data,e) => {
+  const dateToday = new Date().toISOString().slice(0, 10);
+  console.log(selectedOption)
+   const selectedOptionsFiltered = selectedOption
+     .map((data) => data.value)
+     .join(", ");
+
+     console.log(selectedOptionsFiltered)
+  try {
+    const response = await api.post(
       "/job",
       {
         companyLogo: data.companyLogo,
@@ -39,7 +44,7 @@ const CreateJob = () => {
         maximumSalary: data.maximumSalary,
         minimumSalary: data.minimumSalary,
         salaryType: data.salaryType,
-        skills: data.skills,
+        requiredSkill: selectedOptionsFiltered,
         title: data.title,
         jobPostedBy: userId,
         postedOn: dateToday,
@@ -50,42 +55,59 @@ const CreateJob = () => {
         },
       }
     );
-    if (response.status == 201) {
-  toast.error("Job posted successfully");
-    }else{
-      toast.error("Error posting the job")
-    }
-  };
 
-  const options = [
-    { value: "Python", label: "Python" },
-    { value: "Ruby", label: "Ruby" },
-    { value: "PHP", label: "PHP" },
-    { value: "Swift", label: "Swift" },
-    { value: "TypeScript", label: "TypeScript" },
-    { value: "Angular", label: "Angular" },
-    { value: "Vue.js", label: "Vue.js" },
-    { value: "Node.js", label: "Node.js" },
-    { value: "Django", label: "Django" },
-    { value: "Flask", label: "Flask" },
-    { value: "Spring", label: "Spring" },
-    { value: "Express.js", label: "Express.js" },
-    { value: "Laravel", label: "Laravel" },
-    { value: "Bootstrap", label: "Bootstrap" },
-    { value: "jQuery", label: "jQuery" },
-    { value: "Ruby on Rails", label: "Ruby on Rails" },
-    { value: "Vue.js", label: "Vue.js" },
-    { value: "Sass", label: "Sass" },
-    { value: "LESS", label: "LESS" },
-    { value: "Go", label: "Go" },
-    { value: "Rust", label: "Rust" },
-    { value: "Haskell", label: "Haskell" },
-    { value: "Kotlin", label: "Kotlin" },
-  ];
+    if (response.status === 201) {
+      toast.success("Job posted successfully");
+
+    navigate(`/my-job`)
+      
+    } 
+    
+    if(response.status === 500) {
+      toast.error("Internal Server Error");
+    }
+  } catch (error) {
+    console.error("Error during API call:", error);
+    toast.error("Error posting the job");
+  }
+};
+
+ 
+const programmingLanguages = [
+  "Python",
+  "Ruby",
+  "PHP",
+  "Swift",
+  "TypeScript",
+  "Angular",
+  "Vue.js",
+  "Node.js",
+  "Django",
+  "Flask",
+  "Spring",
+  "Express.js",
+  "Laravel",
+  "Bootstrap",
+  "jQuery",
+  "Ruby on Rails",
+  "Vue.js",
+  "Sass",
+  "LESS",
+  "Go",
+  "Rust",
+  "Haskell",
+  "Kotlin",
+];
+
+const options = programmingLanguages.map((language) => ({
+  value: language,
+  label: language,
+}));
+
 
   return (
     <div className="max-w-screen-2xl container mx-auto xl:px-24 px-4">
-      <ToastContainer />
+     
       {/* form  */}
       <div className="bg-[#fafafa] py-10 px-4 lg:px-16">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -227,8 +249,8 @@ const CreateJob = () => {
                 )}
               </label>
               <input
-                type="text"
-                placeholder={"Ex: 2023-11-03"}
+                type="date" // Use type 'date' for date input
+                placeholder="2023-11-03"
                 {...register("expiryDate", {
                   required: true,
                 })}
